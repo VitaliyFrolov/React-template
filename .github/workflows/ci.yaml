@@ -1,0 +1,62 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  packages:
+    name: Dependencies Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn install
+  eslint:
+    name: Linter Check
+    needs: packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies (using cached Yarn)
+        run: yarn install
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Run linter
+        run: yarn run lint
+  vitest:
+    name: Unit Testing
+    needs: packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies (using cached Yarn)
+        run: yarn install
+      - uses: actions/setup-node@v4 
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      - name: Run unit tests
+        run: yarn run test
+  build:
+    name: Build
+    needs: packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4 
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Run build docker image
+        run: docker-compose -f docker-compose.prod.yaml up -d --build

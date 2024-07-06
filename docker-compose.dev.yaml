@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  web-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: "always"
+    container_name: "web-app"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/web-app
+      - /web-app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - HOST=0.0.0.0
+    command: sh -c 'yarn run dev --host=0.0.0.0'
