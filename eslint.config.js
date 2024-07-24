@@ -25,6 +25,7 @@ module.exports = tseslint.config(
       'global.d.ts',
       'setupTests.ts',
       '.husky',
+      '.storybook',
       '.github',
     ],
   },
