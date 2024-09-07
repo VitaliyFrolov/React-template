@@ -1,8 +1,12 @@
-  version: "3.9"
+version: "3.9"
 
-  services:
-    web-app-prod:
-      container_name: web-app-prod
-      build:
-        context: .
-        dockerfile: Dockerfile.prod
+services:
+  web-app-prod:
+    container_name: web-app-prod
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "80:80"
+    environment:
+      NODE_ENV: production
