@@ -1,4 +1,4 @@
-name: Continuous Integration / Continuous Deployment
+name: Continuous Integration
 
 on:
   push:
@@ -52,39 +52,3 @@ jobs:
           cache: 'yarn'
       - name: Run unit tests
         run: yarn run test
-
-  build:
-    name: Build
-    needs: packages
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4 
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install Docker and Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-      - name: Run build docker image
-        run: docker-compose -f docker-compose.prod.yaml up -d --build
-
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
-        run: yarn install
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.DEPLOY_TOKEN }}
-          publish_dir: ./public
-          force_orphan: true
