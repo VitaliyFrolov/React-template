@@ -51,9 +51,10 @@ jobs:
           cache: 'yarn'
       - name: Run unit tests
         run: yarn run test
-  
+
   build:
     name: Build
+    needs: packages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
