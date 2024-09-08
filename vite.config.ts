@@ -10,6 +10,9 @@ export default defineConfig({
       scopeBehaviour: 'local',
     },
   },
+  build: {
+    outDir: 'dist' 
+  },
   test: {
     globals: true,
     environment: "jsdom",
