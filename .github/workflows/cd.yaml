@@ -7,17 +7,24 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Dependencies Check
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
       - name: Install dependencies
         run: yarn install
       - name: Build Project
-        run: yarn run build 
+        run: yarn build
+      - name: Start Project
+        run: yarn start
 
 deploy:
      name: Deploy
