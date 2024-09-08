@@ -11,15 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4 
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install Docker and Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-      - name: Run build docker image
-        run: docker-compose -f docker-compose.prod.yaml up -d --build
+      - name: Install dependencies
+        run: yarn install
+      - name: Build Project
+        run: yarn run build 
 
   deploy:
     name: Deploy
@@ -28,14 +26,6 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: Install dependencies
-        run: yarn install
-      - name: Build Project
-        run: yarn run build
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
