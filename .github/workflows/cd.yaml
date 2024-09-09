@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Dependencies Check
+    name: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,21 +23,19 @@ jobs:
         run: yarn install
       - name: Build Project
         run: yarn build
-      - name: Start Project
-        run: yarn start
 
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-      - name: List contents of dist
-        run: ls -la ./dist
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.DEPLOY_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
+  # deploy:
+  #   name: Deploy
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/main'
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: List contents of dist
+  #       run: ls -la ./dist
+  #     - name: Deploy to GitHub Pages
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       with:
+  #         github_token: ${{ secrets.DEPLOY_TOKEN }}
+  #         publish_dir: ./dist
+  #         force_orphan: true
